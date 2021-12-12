@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/patonaiszabolcs
+  jpa:
+    open-in-view: false
