@@ -3,3 +3,14 @@ spring:
     url: jdbc:postgresql://localhost:5432/patonaiszabolcs
   jpa:
     open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+
+logging:
+    register-shutdown-hook: false
+    level:
+      root: INFO
+      hu.webuni.transportation.*: DEBUG
+      org.springframework.security: DEBUG
+

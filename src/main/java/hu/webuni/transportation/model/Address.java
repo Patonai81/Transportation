@@ -1,9 +1,6 @@
 package hu.webuni.transportation.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +10,9 @@ import javax.validation.constraints.Size;
 
 @Builder(toBuilder = true, builderMethodName = "hiddenInternalBuilder")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@ToString
 
 @Entity
 public class Address {

@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Builder(toBuilder = true)
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 
 @Entity

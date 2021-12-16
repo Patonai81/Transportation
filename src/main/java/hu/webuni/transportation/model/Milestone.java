@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Builder(toBuilder = true, builderMethodName = "hiddenInternalBuilder")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 
 @Entity

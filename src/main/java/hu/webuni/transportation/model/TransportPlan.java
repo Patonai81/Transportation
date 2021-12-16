@@ -9,6 +9,7 @@ import java.util.List;
 
 @Builder(toBuilder = true, builderMethodName = "hiddenInternalBuilder")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 
 @Entity
