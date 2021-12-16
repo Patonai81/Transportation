@@ -4,11 +4,18 @@ import hu.webuni.transportation.dto.AddressDTO;
 import hu.webuni.transportation.model.Address;
 import org.mapstruct.Mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
 
-AddressDTO toAddressDTO(Address address);
 
-Address toAddress(AddressDTO addressDTO);
+    ArrayList<AddressDTO> toAddressDTOList(List<Address> address);
+
+
+    AddressDTO toAddressDTO(Address address);
+
+    Address toAddress(AddressDTO addressDTO);
 
 }

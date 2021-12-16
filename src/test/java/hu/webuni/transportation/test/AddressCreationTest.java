@@ -1,9 +1,10 @@
-package hu.webuni.transportation;
+package hu.webuni.transportation.test;
 
 import hu.webuni.transportation.dto.AddressDTO;
 import hu.webuni.transportation.exception.base.ErrorData;
-import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,14 +14,13 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.util.Streams.stream;
 
+@Tag("address")
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AddressTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class AddressCreationTest {
 
     @Autowired
     WebTestClient webClient;

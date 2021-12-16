@@ -36,8 +36,8 @@ public class Address {
     private double latitude;
 
 
-    public static AddressBuilder builder(String countryCode,String city,String postalCode,String houseNum) {
-        return hiddenInternalBuilder().countryCode(countryCode).city(city).postalCode(postalCode).houseNum(houseNum);
+    public static AddressBuilder builder(String countryCode,String city,String postalCode,String street,String houseNum) {
+        return hiddenInternalBuilder().countryCode(countryCode).city(city).postalCode(postalCode).street(street).houseNum(houseNum);
     }
 
 }
