@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AddressFilterTest {
+public class AddressSearchTest {
 
     @Autowired
     WebTestClient webClient;
@@ -70,9 +70,10 @@ public class AddressFilterTest {
                 .expectStatus()
                 .isOk()
                 .expectBody(AddressDTO.class)
+                .value(item -> assertThat(item.getId()).isNotNull())
                 .returnResult();
 
-        assertThat(result.getResponseBody()).hasFieldOrPropertyWithValue("countryCode","HU");
+        assertThat(result.getResponseBody()).hasFieldOrProperty("countryCode");
 
     }
 
@@ -91,30 +92,7 @@ public class AddressFilterTest {
         assertThat(result.getResponseBody()).contains("Address cannot be found for given id");
     }
 
-    @Test
-    public void testDeleteExistingAddress() {
-
-        webClient.delete()
-                .uri("api/addresses/1")
-                .exchange()
-                .expectStatus()
-                .isOk();
-
-    }
-
-    @Test
-    public void testDeleteNonExistingAddress() {
-
-        webClient.delete()
-                .uri("api/addresses/100")
-                .exchange()
-                .expectStatus()
-                .isOk();
-
-    }
-
-
-    public List <AddressDTO> getAllAddresses(){
+    public List<AddressDTO> getAllAddresses(){
 
         EntityExchangeResult<List <AddressDTO>> result = webClient.get()
                 .uri("api/addresses")
@@ -127,5 +105,8 @@ public class AddressFilterTest {
         return (List<AddressDTO>) result.getResponseBody();
 
     }
+
+
+
 
 }

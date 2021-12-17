@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Getter
 @ToString
+@Setter
 
 @Entity
 public class Address {
@@ -39,5 +40,14 @@ public class Address {
     public static AddressBuilder builder(String countryCode,String city,String postalCode,String street,String houseNum) {
         return hiddenInternalBuilder().countryCode(countryCode).city(city).postalCode(postalCode).street(street).houseNum(houseNum);
     }
+
+    public Address(Address address){
+        this.countryCode=address.getCountryCode();
+        this.city= address.getCity();
+        this.houseNum=address.getHouseNum();
+        this.latitude=address.getLatitude();
+        this.postalCode= address.getPostalCode();
+    }
+
 
 }

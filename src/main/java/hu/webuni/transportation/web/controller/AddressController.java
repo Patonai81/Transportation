@@ -1,25 +1,19 @@
 package hu.webuni.transportation.web.controller;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import hu.webuni.transportation.dto.AddressDTO;
 import hu.webuni.transportation.dto.validator.AddressValidator;
+import hu.webuni.transportation.exception.PathAndEntityIdDoesNOTMATCHException;
 import hu.webuni.transportation.exception.AddressRelatedException;
 import hu.webuni.transportation.mapper.AddressMapper;
 import hu.webuni.transportation.model.Address;
 import hu.webuni.transportation.service.AddressService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -48,7 +42,7 @@ public class AddressController {
 
         Address address = addressMapper.toAddress(addressDTO);
         log.debug("Address mapping successfull");
-        address = addressService.createAddress(address);
+        address = addressService.create(address);
         AddressDTO result = addressMapper.toAddressDTO(address);
         log.debug("Address backmapping was successfull");
         return result;
@@ -58,7 +52,6 @@ public class AddressController {
     public ArrayList<AddressDTO> getAllAddresses() {
         log.debug("Getting list of all registered addressed");
         return addressMapper.toAddressDTOList(addressService.findAll());
-
     }
 
     @GetMapping("/{id}")
@@ -76,6 +69,29 @@ public class AddressController {
         log.debug("Trying to delete address with given id: " + id);
         addressService.delete(id);
         log.debug("Address has been deleted");
+    }
+
+    @PutMapping("/{id}")
+    public AddressDTO adjustAddress(@PathVariable("id") Long id, @RequestBody AddressDTO addressDTO, BindingResult bindingResult) {
+        log.debug("Trying to modify address with given id: " + id);
+        if (null != addressDTO.getId() && id != addressDTO.getId()) {
+            throw new PathAndEntityIdDoesNOTMATCHException("incoming ID does not match");
+        }
+        addressValidator.validate(addressDTO, bindingResult);
+        if (bindingResult.hasErrors()) {
+            throw new AddressRelatedException(bindingResult.getAllErrors());
+        }
+        Address address = addressMapper.toAddress(addressDTO);
+        log.debug("Address mapping successfull");
+
+        Address addressFromRepo = addressService.modify(id,address);
+        log.debug("Address has been modified" + addressFromRepo);
+
+        AddressDTO addressDTOResult = addressMapper.toAddressDTO(addressFromRepo);
+        log.debug("Address has been successfully mapped back to response");
+
+        return addressDTOResult;
+
     }
 
 }

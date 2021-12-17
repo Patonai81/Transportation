@@ -1,6 +1,7 @@
 package hu.webuni.transportation.web.exceptionhandler;
 
 import hu.webuni.transportation.exception.AddressCannotBeFoundByIdException;
+import hu.webuni.transportation.exception.PathAndEntityIdDoesNOTMATCHException;
 import hu.webuni.transportation.exception.AddressRelatedException;
 import hu.webuni.transportation.exception.base.ErrorData;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +24,17 @@ public class AddressRelatedExceptionHandler {
 
 
     @ExceptionHandler(AddressCannotBeFoundByIdException.class)
-    public ResponseEntity<String> handleAddressNotFoundByIdException(AddressRelatedException e) {
+    public ResponseEntity<String> handleAddressNotFoundByIdException(AddressCannotBeFoundByIdException e) {
         log.error(e.getLocalizedMessage(),e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getLocalizedMessage());
     }
+
+
+    @ExceptionHandler(PathAndEntityIdDoesNOTMATCHException.class)
+    public ResponseEntity<String> handleEntityIdException(PathAndEntityIdDoesNOTMATCHException e) {
+        log.error(e.getLocalizedMessage(),e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getLocalizedMessage());
+    }
+
+
 }

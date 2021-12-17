@@ -19,6 +19,6 @@ public class TransportationApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-     //initDb.createTestAddresses();
+     initDb.createTestAddresses();
     }
 }
