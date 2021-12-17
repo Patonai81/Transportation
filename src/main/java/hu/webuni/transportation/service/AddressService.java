@@ -1,11 +1,13 @@
 package hu.webuni.transportation.service;
 
+import hu.webuni.transportation.dto.AddressSearchDTO;
 import hu.webuni.transportation.exception.AddressCannotBeFoundByIdException;
 import hu.webuni.transportation.model.Address;
 import hu.webuni.transportation.repository.AddressRepository;
 import hu.webuni.transportation.web.controller.AddressUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -60,6 +62,11 @@ public class AddressService {
         return addressFromRepo;
     }
 
+    public Page<Address> search(AddressSearchDTO addressSearchDTO) {
+        Page currentPage =  addressRepository.findAll(addressSearchDTO.toSpecification(),addressSearchDTO.getPageable());
+        log.debug("Current page parameters: "+currentPage);
+        return currentPage;
+    }
 
 
 }

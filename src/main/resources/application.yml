@@ -6,11 +6,18 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
-
+  data:
+    rest:
+      default-page-size: 100
 logging:
     register-shutdown-hook: false
     level:
       root: INFO
       hu.webuni.transportation.*: DEBUG
       org.springframework.security: DEBUG
+
+
+
+
+
 

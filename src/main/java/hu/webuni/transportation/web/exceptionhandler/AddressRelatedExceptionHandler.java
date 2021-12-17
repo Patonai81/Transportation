@@ -1,6 +1,7 @@
 package hu.webuni.transportation.web.exceptionhandler;
 
 import hu.webuni.transportation.exception.AddressCannotBeFoundByIdException;
+import hu.webuni.transportation.exception.AddressSearchEmptyException;
 import hu.webuni.transportation.exception.PathAndEntityIdDoesNOTMATCHException;
 import hu.webuni.transportation.exception.AddressRelatedException;
 import hu.webuni.transportation.exception.base.ErrorData;
@@ -34,6 +35,12 @@ public class AddressRelatedExceptionHandler {
     public ResponseEntity<String> handleEntityIdException(PathAndEntityIdDoesNOTMATCHException e) {
         log.error(e.getLocalizedMessage(),e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getLocalizedMessage());
+    }
+
+    @ExceptionHandler(AddressSearchEmptyException.class)
+    public ResponseEntity<String> handleEmptySearch(AddressSearchEmptyException e) {
+        log.error(e.getLocalizedMessage(),e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
 
