@@ -3,9 +3,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/patonaiszabolcs
   jpa:
     open-in-view: false
-    show-sql: true
+    #show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   data:
     rest:
       default-page-size: 100
@@ -15,6 +15,10 @@ logging:
       root: INFO
       hu.webuni.transportation.*: DEBUG
       org.springframework.security: DEBUG
+      org.hibernate.SQL: DEBUG
+      org.hibernate.type.descriptor.sql: trace
+
+
 
 
 

@@ -29,6 +29,9 @@ public class Milestone {
     @EqualsAndHashCode.Exclude
     private Address address;
 
+    @ManyToOne
+    private TransportPlan transportPlan;
+
     public static Milestone.MilestoneBuilder builder(Address address) {
         return hiddenInternalBuilder().address(address);
     }

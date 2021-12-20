@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 
 @Entity
 public class Section {

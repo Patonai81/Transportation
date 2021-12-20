@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 
+import javax.transaction.Transactional;
+
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @ServletComponentScan
 public class TransportationApplication implements CommandLineRunner {
@@ -20,7 +22,8 @@ public class TransportationApplication implements CommandLineRunner {
     }
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
-     initDb.createTestAddresses();
+   //  initDb.createTestData();
     }
 }

@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Builder(toBuilder = true, builderMethodName = "hiddenInternalBuilder")
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

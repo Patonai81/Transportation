@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("address")
@@ -33,7 +32,7 @@ public class AddressCRUDTest {
 
     @BeforeEach
     public void initTest(){
-        initDb.createTestAddresses();
+        initDb.createTestData();
     }
 
 
