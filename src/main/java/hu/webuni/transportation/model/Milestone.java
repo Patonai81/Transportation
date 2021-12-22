@@ -10,15 +10,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-
+@Setter
+@ToString
 @Entity
 public class Milestone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private Ordinal ordinal;
 
     @NotNull
     private LocalDateTime plannedTime;

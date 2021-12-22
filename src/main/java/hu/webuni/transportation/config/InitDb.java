@@ -48,12 +48,16 @@ public class InitDb {
         Milestone milestone2 = Milestone.builder(address2).plannedTime(LocalDateTime.of(2021, 12, 24, 14, 0)).build();
         Milestone milestone3 = Milestone.builder(address3).plannedTime(LocalDateTime.of(2021, 12, 24, 16, 0)).build();
         Milestone milestone4 = Milestone.builder(address4).plannedTime(LocalDateTime.of(2021, 12, 24, 18, 0)).build();
+        Milestone milestone5 = Milestone.builder(address3).plannedTime(LocalDateTime.of(2021, 12, 24, 20, 0)).build();
+        Milestone milestone6 = Milestone.builder(address4).plannedTime(LocalDateTime.of(2021, 12, 24, 22, 0)).build();
+
+
         milestoneRepository.deleteAll();
-        milestoneRepository.saveAllAndFlush(Arrays.asList(milestone1, milestone2, milestone3, milestone4));
+        milestoneRepository.saveAllAndFlush(Arrays.asList(milestone1, milestone2, milestone3, milestone4,milestone5,milestone6));
 
         Section section1 = Section.builder().fromMilestone(milestone1).toMilestone(milestone2).number(1).build();
-        Section section2 = Section.builder().fromMilestone(milestone2).toMilestone(milestone3).number(2).build();
-        Section section3 = Section.builder().fromMilestone(milestone3).toMilestone(milestone4).number(3).build();
+        Section section2 = Section.builder().fromMilestone(milestone3).toMilestone(milestone4).number(2).build();
+        Section section3 = Section.builder().fromMilestone(milestone5).toMilestone(milestone6).number(3).build();
         sectionRepository.deleteAll();
         sectionRepository.saveAllAndFlush(Arrays.asList(section1, section2, section3));
 
@@ -72,6 +76,8 @@ public class InitDb {
         updateMIlestone(milestone2.getId(),transportPlan1.getId());
         updateMIlestone(milestone3.getId(),transportPlan1.getId());
         updateMIlestone(milestone4.getId(),transportPlan1.getId());
+        updateMIlestone(milestone5.getId(),transportPlan1.getId());
+        updateMIlestone(milestone6.getId(),transportPlan1.getId());
 
 
     }

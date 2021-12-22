@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 
 @Builder(toBuilder = true)
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 
@@ -40,5 +39,18 @@ public class Section {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private TransportPlan transportPlan;
+
+
+    public Section(final Long id, final Integer number, final Milestone fromMilestone, final Milestone toMilestone, final TransportPlan transportPlan) {
+        this.id = id;
+        this.number = number;
+        fromMilestone.setOrdinal(Ordinal.FROM);
+        this.fromMilestone = fromMilestone;
+        toMilestone.setOrdinal(Ordinal.TO);
+        this.toMilestone = toMilestone;
+        this.transportPlan = transportPlan;
+    }
+
+
 
 }
