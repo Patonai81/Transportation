@@ -1,5 +1,6 @@
 package hu.webuni.transportation.web.controller;
 
+import hu.webuni.transportation.config.DelayConstantProperty;
 import hu.webuni.transportation.dto.RegisterDelayDTO;
 import hu.webuni.transportation.dto.validator.RegisterDelayDTOValidator;
 import hu.webuni.transportation.service.TransportService;
@@ -21,6 +22,8 @@ public class TransportController {
     @Autowired
     TransportService transportService;
 
+    @Autowired
+    DelayConstantProperty delayConstantProperty;
 
     @PostMapping("/{id}/delay")
     public void registerDelay(@RequestBody RegisterDelayDTO registerDelayDTO, @PathVariable("id") Long id, BindingResult bindingResult) {
@@ -29,5 +32,6 @@ public class TransportController {
         registerDelayDTOValidator.validate(registerDelayDTO, bindingResult);
         transportService.updateTransportPlan(registerDelayDTO);
     }
+
 
 }
