@@ -34,6 +34,7 @@ public class InitDb {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void deleteTestData(){
         transportPlanRepository.deleteAll();
+        milestoneRepository.deleteAll();
         addressRepository.deleteAll();
     }
 
@@ -58,9 +59,10 @@ public class InitDb {
         Milestone milestone4 = Milestone.builder(address4).plannedTime(LocalDateTime.of(2021, 12, 24, 18, 0)).build();
         Milestone milestone5 = Milestone.builder(address5).plannedTime(LocalDateTime.of(2021, 12, 24, 20, 0)).build();
         Milestone milestone6 = Milestone.builder(address6).plannedTime(LocalDateTime.of(2021, 12, 24, 22, 0)).build();
+        Milestone milestone7 = Milestone.builder(address7).plannedTime(LocalDateTime.of(2029, 12, 24, 22, 0)).build();
 
 
-        milestoneRepository.saveAllAndFlush(Arrays.asList(milestone1, milestone2, milestone3, milestone4, milestone5, milestone6));
+        milestoneRepository.saveAllAndFlush(Arrays.asList(milestone1, milestone2, milestone3, milestone4, milestone5, milestone6,milestone7));
 
         Section section1 = Section.builder().fromMilestone(milestone1).toMilestone(milestone2).number(1).build();
         Section section2 = Section.builder().fromMilestone(milestone3).toMilestone(milestone4).number(2).build();
