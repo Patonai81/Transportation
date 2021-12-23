@@ -54,7 +54,7 @@ public class AddressFindTest {
         );
 
 
-       assertThat(result.getResponseBody()).hasSize(4);
+       assertThat(result.getResponseBody()).hasSize(8);
        assertThat(addresses).extracting(AddressDTO::getCountryCode).usingDefaultElementComparator().contains("HU");
 
     }

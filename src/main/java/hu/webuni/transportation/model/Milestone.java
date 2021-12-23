@@ -26,8 +26,7 @@ public class Milestone {
     @NotNull
     private LocalDateTime plannedTime;
 
-    @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Address address;

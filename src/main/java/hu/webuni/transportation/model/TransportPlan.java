@@ -22,7 +22,7 @@ public class TransportPlan {
 
     private BigDecimal profit;
 
-    @OneToMany(mappedBy = "transportPlan")
+    @OneToMany(mappedBy = "transportPlan",cascade = CascadeType.REMOVE)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Section> planSections;

@@ -32,7 +32,7 @@ public class AddressCRUDTest {
 
     @BeforeEach
     public void initTest(){
-        initDb.createTestData();
+       initDb.createTestData();
     }
 
 

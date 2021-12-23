@@ -25,5 +25,6 @@ public class TransportationApplication implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
      initDb.createTestData();
+     initDb.deleteTestData();
     }
 }
