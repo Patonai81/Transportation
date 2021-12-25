@@ -9,6 +9,7 @@ import hu.webuni.transportation.model.TransportPlan;
 import hu.webuni.transportation.repository.MilestoneRepository;
 import hu.webuni.transportation.repository.SectionRepository;
 import hu.webuni.transportation.repository.TransportPlanRepository;
+import hu.webuni.transportation.service.SectionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -20,9 +21,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("delay")
@@ -45,6 +45,9 @@ public class TransportPlanDelayTest {
 
     @Autowired
     SectionRepository sectionRepository;
+
+    @Autowired
+    SectionService sectionService;
 
     @BeforeEach
     public void initTest() {
@@ -100,7 +103,7 @@ public class TransportPlanDelayTest {
     @Test
     public void testUpdateWithFromMilestoneDelay() {
 
-        Milestone milestone = milestoneRepository.getOrdinalMilestones(Ordinal.TO).get(0);
+        Milestone milestone = milestoneRepository.getOrdinalMilestones(Ordinal.FROM).get(0);
         TransportPlan transportPlan = milestone.getTransportPlan();
         Section section = sectionRepository.getSectionByMilestoneId(milestone.getId()).get();
         Milestone toMilestone = section.getToMilestone();
@@ -129,7 +132,63 @@ public class TransportPlanDelayTest {
         minutes = ((duration.getSeconds() % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
         assertThat(minutes).isEqualTo(delay);
 
+        System.out.println(milestone);
+        System.out.println(toMilestone);
 
     }
 
+    @Test
+    public void testUpdateWithToMilestoneDelay() {
+
+        Milestone toMilestone = milestoneRepository.getOrdinalMilestones(Ordinal.TO).get(0);
+        TransportPlan transportPlan = toMilestone.getTransportPlan();
+
+        Section section = sectionService.getNextSectionByMilestoneId(toMilestone.getId()).get();
+        Milestone fromMilestone = section.getFromMilestone();
+
+        LocalDateTime originalTimeFromSection = toMilestone.getPlannedTime();
+        LocalDateTime originalTimeToSection = fromMilestone.getPlannedTime();
+        long delay = 44l;
+
+        RegisterDelayDTO registerDelayDTO = new RegisterDelayDTO(transportPlan.getId(), toMilestone.getId(),delay);
+        webClient.post()
+                .uri("api/transportPlans/"+transportPlan.getId()+"/delay")
+                .bodyValue(registerDelayDTO)
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+        Milestone milestoneAfterUpdate = milestoneRepository.findById(toMilestone.getId()).get();
+        LocalDateTime adjustedTimeFromSection = milestoneAfterUpdate.getPlannedTime();
+        Duration duration = Duration.between(originalTimeFromSection,adjustedTimeFromSection);
+        long minutes = ((duration.getSeconds() % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
+        assertThat(minutes).isEqualTo(delay);
+
+        Milestone toMilestoneAfterUpdate = milestoneRepository.findById(fromMilestone.getId()).get();
+        LocalDateTime adjustedTimeToSection = toMilestoneAfterUpdate.getPlannedTime();
+        duration = Duration.between(originalTimeToSection,adjustedTimeToSection);
+        minutes = ((duration.getSeconds() % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE);
+        assertThat(minutes).isEqualTo(delay);
+
+    }
+
+    @Test
+    public void testCheckProfitAfterUpdate() {
+
+        Milestone toMilestone = milestoneRepository.getOrdinalMilestones(Ordinal.TO).get(0);
+        TransportPlan transportPlan = toMilestone.getTransportPlan();
+
+        long delay = 44l;
+
+        RegisterDelayDTO registerDelayDTO = new RegisterDelayDTO(transportPlan.getId(), toMilestone.getId(),delay);
+        webClient.post()
+                .uri("api/transportPlans/"+transportPlan.getId()+"/delay")
+                .bodyValue(registerDelayDTO)
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+      TransportPlan transportPlanAfterUpdate = transportPlanRepository.findById(transportPlan.getId()).get();
+        assertThat(transportPlanAfterUpdate.getProfit().doubleValue()).isEqualTo((97.5*transportPlan.getProfit().doubleValue())/100);
+    }
 }
