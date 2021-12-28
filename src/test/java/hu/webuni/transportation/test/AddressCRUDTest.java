@@ -3,19 +3,21 @@ package hu.webuni.transportation.test;
 import hu.webuni.transportation.config.InitDb;
 import hu.webuni.transportation.dto.AddressDTO;
 import hu.webuni.transportation.exception.base.ErrorData;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import hu.webuni.transportation.service.JwtService;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static hu.webuni.transportation.config.RightConstants.ADDRESS_MANAGER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("address")
@@ -30,11 +32,30 @@ public class AddressCRUDTest {
     @Autowired
     InitDb initDb;
 
+    @Autowired
+    JwtService jwtService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    private static String TOKEN;
+
+    @BeforeAll
+    public void createToken(){
+        UserDetails user1 = User.builder()
+                .username("TestAddress")
+                .password("address")
+                .authorities(ADDRESS_MANAGER.name())
+                .passwordEncoder((password) -> passwordEncoder.encode(password))
+                .build();
+
+        TOKEN = jwtService.createJwtToken(user1);
+    }
+
     @BeforeEach
     public void initTest(){
        initDb.createTestData();
     }
-
 
     @Test
     public void testCreateAddressPositive() {
@@ -45,6 +66,7 @@ public class AddressCRUDTest {
 
         webClient.post()
                 .uri("api/addresses")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .body(Mono.just(testAddress), AddressDTO.class)
                 .exchange()
                 .expectStatus()
@@ -61,6 +83,7 @@ public class AddressCRUDTest {
 
         webClient.post()
                 .uri("api/addresses")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .body(Mono.just(testAddress), AddressDTO.class)
                 .exchange()
                 .expectStatus()
@@ -77,6 +100,7 @@ public class AddressCRUDTest {
 
         EntityExchangeResult result = webClient.post()
                 .uri("api/addresses")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .body(Mono.just(testAddress), AddressDTO.class)
                 .exchange()
                 .expectBody(List.class)
@@ -92,6 +116,7 @@ public class AddressCRUDTest {
 
         webClient.delete()
                 .uri("api/addresses/1")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -103,6 +128,7 @@ public class AddressCRUDTest {
 
         webClient.delete()
                 .uri("api/addresses/100")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -118,6 +144,7 @@ public class AddressCRUDTest {
 
         EntityExchangeResult result = webClient.put()
                 .uri("api/addresses/"+addressFromRepo.getId())
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .body(Mono.just(testAddress), AddressDTO.class)
                 .exchange()
                 .expectStatus().isOk()
@@ -141,6 +168,7 @@ public class AddressCRUDTest {
 
         EntityExchangeResult result = webClient.put()
                 .uri("api/addresses/"+addressFromRepo.getId())
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .body(Mono.just(testAddress), AddressDTO.class)
                 .exchange()
                 .expectStatus().isBadRequest()
@@ -161,6 +189,7 @@ public class AddressCRUDTest {
 
         EntityExchangeResult <List <ErrorData>> result = webClient.put()
                 .uri("api/addresses/"+addressFromRepo.getId())
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .body(Mono.justOrEmpty(testAddress), AddressDTO.class)
                 .exchange()
                 .expectStatus().isBadRequest()
@@ -178,6 +207,7 @@ public class AddressCRUDTest {
 
         EntityExchangeResult<List <AddressDTO>> result = webClient.get()
                 .uri("api/addresses")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .exchange()
                 .expectStatus()
                 .isOk()

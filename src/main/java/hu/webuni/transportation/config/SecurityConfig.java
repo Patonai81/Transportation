@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/login/**").permitAll()
-                .antMatchers("/api/addresses/search").hasAuthority(GENERAL.name())
+                .antMatchers("/api/addresses/search").permitAll()
                 .antMatchers("/api/addresses/**").hasAuthority(ADDRESS_MANAGER.name())
                 .antMatchers("/api/transportPlans/**").hasAuthority(TRANSPORT_MANAGER.name())
                 .anyRequest().denyAll();

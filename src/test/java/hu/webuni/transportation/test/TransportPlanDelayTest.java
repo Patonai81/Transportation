@@ -9,20 +9,22 @@ import hu.webuni.transportation.model.TransportPlan;
 import hu.webuni.transportation.repository.MilestoneRepository;
 import hu.webuni.transportation.repository.SectionRepository;
 import hu.webuni.transportation.repository.TransportPlanRepository;
+import hu.webuni.transportation.service.JwtService;
 import hu.webuni.transportation.service.SectionService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static hu.webuni.transportation.config.RightConstants.TRANSPORT_MANAGER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("delay")
@@ -54,6 +56,26 @@ public class TransportPlanDelayTest {
         initDb.createTestData();
     }
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    JwtService jwtService;
+
+    private static String TOKEN;
+
+    @BeforeAll
+    public void createToken(){
+        UserDetails user1 = User.builder()
+                .username("TestTransport")
+                .password("transport")
+                .authorities(TRANSPORT_MANAGER.name())
+                .passwordEncoder((password) -> passwordEncoder.encode(password))
+                .build();
+
+        TOKEN = jwtService.createJwtToken(user1);
+    }
+
     static final int MINUTES_PER_HOUR = 60;
     static final int SECONDS_PER_MINUTE = 60;
     static final int SECONDS_PER_HOUR = SECONDS_PER_MINUTE * MINUTES_PER_HOUR;
@@ -64,6 +86,7 @@ public class TransportPlanDelayTest {
         RegisterDelayDTO registerDelayDTO = new RegisterDelayDTO(null,22l,12l);
         webClient.post()
                 .uri("api/transportPlans/666/delay")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .bodyValue(registerDelayDTO)
                 .exchange()
                 .expectStatus()
@@ -78,6 +101,7 @@ public class TransportPlanDelayTest {
         RegisterDelayDTO registerDelayDTO = new RegisterDelayDTO(null,milestones.get(0).getId(),12l);
         webClient.post()
                 .uri("api/transportPlans/666/delay")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .bodyValue(registerDelayDTO)
                 .exchange()
                 .expectStatus()
@@ -93,6 +117,7 @@ public class TransportPlanDelayTest {
         RegisterDelayDTO registerDelayDTO = new RegisterDelayDTO(null,milestones.get(0).getId(),12l);
         webClient.post()
                 .uri("api/transportPlans/"+transportPlan.getId()+"/delay")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .bodyValue(registerDelayDTO)
                 .exchange()
                 .expectStatus()
@@ -115,6 +140,7 @@ public class TransportPlanDelayTest {
         RegisterDelayDTO registerDelayDTO = new RegisterDelayDTO(transportPlan.getId(), milestone.getId(),delay);
         webClient.post()
                 .uri("api/transportPlans/"+transportPlan.getId()+"/delay")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .bodyValue(registerDelayDTO)
                 .exchange()
                 .expectStatus()
@@ -153,6 +179,7 @@ public class TransportPlanDelayTest {
         RegisterDelayDTO registerDelayDTO = new RegisterDelayDTO(transportPlan.getId(), toMilestone.getId(),delay);
         webClient.post()
                 .uri("api/transportPlans/"+transportPlan.getId()+"/delay")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .bodyValue(registerDelayDTO)
                 .exchange()
                 .expectStatus()
@@ -183,6 +210,7 @@ public class TransportPlanDelayTest {
         RegisterDelayDTO registerDelayDTO = new RegisterDelayDTO(transportPlan.getId(), toMilestone.getId(),delay);
         webClient.post()
                 .uri("api/transportPlans/"+transportPlan.getId()+"/delay")
+                .headers(http -> http.setBearerAuth(TOKEN))
                 .bodyValue(registerDelayDTO)
                 .exchange()
                 .expectStatus()
